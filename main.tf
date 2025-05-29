@@ -4,11 +4,17 @@ provider "aws" {
   profile                  = "default"
 }
 
+data "archive_file" "lambda_zip" {
+  type        = "zip"
+  source_file = "${path.module}/lambda_function.py"
+  output_path = "${path.module}/lambda_function.zip"
+}
+
 resource "aws_lambda_function" "sensor_reader" {
-  filename         = "lambda_function.zip"
+  filename         = data.archive_file.lambda_zip.output_path
   function_name    = "SensorReader"
-  role             = "arn:aws:iam::481311808619:role/LabRole" 
+  role             = "arn:aws:iam::481311808619:role/LabRole"
   handler          = "lambda_function.lambda_handler"
   runtime          = "python3.12"
-  source_code_hash = filebase64sha256("lambda_function.zip")
+  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
 }
