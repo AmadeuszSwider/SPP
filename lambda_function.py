@@ -14,7 +14,7 @@ def lambda_handler(event, context):
 
     lnR = math.log(R)
     inv_T = a + b * lnR + c * (lnR ** 3)
-    T = 1 / inv_T - 273.15  # Kelviny -> Celsjusze
+    T = 1 / inv_T - 273.15  
 
     return {
         "sensor_id": sensor_id,
